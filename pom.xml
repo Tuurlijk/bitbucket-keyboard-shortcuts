@@ -84,6 +84,18 @@
 			<version>1.1.1</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.google.collections</groupId>
+			<artifactId>google-collections</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.atlassian.activeobjects</groupId>
+			<artifactId>activeobjects-plugin</artifactId>
+			<version>${ao.version}</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -140,6 +152,7 @@
 		</plugins>
 	</build>
 	<properties>
+		<ao.version>0.25.2</ao.version>
 		<bitbucket.version>4.11.1</bitbucket.version>
 		<bitbucket.data.version>4.11.1</bitbucket.data.version>
 		<amps.version>6.2.6</amps.version>

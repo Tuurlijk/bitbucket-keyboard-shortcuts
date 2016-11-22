@@ -11,22 +11,22 @@
 	<!-- add our i18n resource -->
 	<resource type="i18n" name="i18n" location="bitbucket-keyboard-shortcuts"/>
 	<!--
-		Contexts:
-		Got from: target/bitbucket/webapp/static/bitbucket/internal/widget/keyboard-shortcuts/keyboard-shortcuts.js
-		 'repository': { displayName: AJS.I18n.getText('bitbucket.web.keyboardshortcut.context.repository') },
-		 'branch-compare': { displayName: AJS.I18n.getText('bitbucket.web.keyboardshortcut.context.branch-compare') },
-		 'branch-list': { displayName: AJS.I18n.getText('bitbucket.web.keyboardshortcut.context.branch-list') },
-		 'commit': { displayName: AJS.I18n.getText('bitbucket.web.keyboardshortcut.context.commit') },
-		 'commits': { displayName: AJS.I18n.getText('bitbucket.web.keyboardshortcut.context.commits') },
-		 'diff-tree': { displayName: AJS.I18n.getText('bitbucket.web.keyboardshortcut.context.diff-tree') }, //Map this to commit too
-		 'diff-view': { displayName: AJS.I18n.getText('bitbucket.web.keyboardshortcut.context.diff-view') },
-		 'filebrowser': { displayName: AJS.I18n.getText('bitbucket.web.keyboardshortcut.context.filebrowser') },
-		 'global': { displayName: AJS.I18n.getText('bitbucket.web.keyboardshortcut.context.global') },
-		 'pull-request': { displayName: AJS.I18n.getText('bitbucket.web.keyboardshortcut.context.pull-request') },
-		 'pull-request-list': { displayName: AJS.I18n.getText('bitbucket.web.keyboardshortcut.context.pull-request-list') },
-		 'pull-request-overview': { displayName: AJS.I18n.getText('bitbucket.web.keyboardshortcut.context.pull-request') },
-		 'sourceview': { displayName: AJS.I18n.getText('bitbucket.web.keyboardshortcut.context.sourceview') }
-	  -->
+		 Contexts:
+		 Got from: target/plugin/webapp/static/plugin/internal/widget/keyboard-shortcuts/keyboard-shortcuts.js
+		  'repository': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.repository') },
+		  'branch-compare': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.branch-compare') },
+		  'branch-list': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.branch-list') },
+		  'commit': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.commit') },
+		  'commits': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.commits') },
+		  'diff-tree': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.diff-tree') }, //Map this to commit too
+		  'diff-view': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.diff-view') },
+		  'filebrowser': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.filebrowser') },
+		  'global': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.global') },
+		  'pull-request': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.pull-request') },
+		  'pull-request-list': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.pull-request-list') },
+		  'pull-request-overview': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.pull-request') },
+		  'sourceview': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.sourceview') }
+		-->
 	<keyboard-shortcut name="Add Tag" i18n-name-key="add-tag.name" key="add-tag">
 		<description key="add-tag.description">Add tag</description>
 		<order>10</order>
@@ -77,15 +77,21 @@
 		<context>pull-request</context>
 	</keyboard-shortcut>
 
+	<component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects"/>
 	<component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
 	<component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory"/>
 	<component-import key="userService" interface="com.atlassian.bitbucket.user.UserService"/>
 	<component-import key="renderer" interface="com.atlassian.templaterenderer.velocity.one.six.VelocityTemplateRenderer"/>
 
-	<servlet name="Account Servlet" key="account-servlet" class="com.michielroos.bitbucket.servlet.AccountServlet">
+	<servlet name="Account Servlet" key="account-servlet" class="com.michielroos.bitbucket.plugin.keyboardshortcuts.AccountServlet">
 		<description key="profile-servlet.description">The Account Servlet Plugin</description>
 		<url-pattern>/keyboard-shortcuts/account/*</url-pattern>
 	</servlet>
+
+	<ao key="ao-module">
+		<description>The module configuring the Active Objects service used by this plugin</description>
+		<entity>com.michielroos.bitbucket.plugin.keyboardshortcuts.ao.ShortcutOverride</entity>
+	</ao>
 
 	<web-item key="account-plugin-tab" name="Account navigation tab" section="bitbucket.user.account.nav" weight="100">
 		<label>Keyboard shortcuts</label>
