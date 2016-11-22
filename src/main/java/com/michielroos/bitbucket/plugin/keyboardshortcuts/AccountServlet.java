@@ -13,6 +13,8 @@ import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.bitbucket.user.Person;
 import com.atlassian.bitbucket.user.UserService;
 import com.atlassian.sal.api.transaction.TransactionCallback;
+import com.atlassian.sal.api.user.UserKey;
+import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.templaterenderer.TemplateRenderer;
 import com.michielroos.bitbucket.plugin.keyboardshortcuts.ao.ShortcutOverride;
 
@@ -21,29 +23,38 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
+import net.java.ao.Query;
+import java.io.PrintWriter;
 
 import static com.google.common.base.Preconditions.*;
 
 public class AccountServlet extends HttpServlet {
     private final ActiveObjects ao;
-    private final UserService userService;
+    private final UserManager userManager;
     private final TemplateRenderer renderer;
 
-    public AccountServlet(ActiveObjects ao, TemplateRenderer renderer, UserService userService) {
+    public AccountServlet(ActiveObjects ao, TemplateRenderer renderer, UserManager userManager) {
         this.ao = checkNotNull(ao);
-        this.renderer = renderer;
-        this.userService = userService;
+        this.renderer = checkNotNull(renderer);
+        this.userManager = checkNotNull(userManager);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get userSlug from path
-        String pathInfo = request.getPathInfo();
+        final UserKey userKey = userManager.getRemoteUserKey();
+        final PrintWriter w = response.getWriter();
+        w.write("<h1>Todos</h1>");
 
-        String userSlug = pathInfo.substring(1); // Strip leading slash
-        Person user = userService.getUserBySlug(userSlug);
+        // the form to post more TODOs
+        w.write("<form method=\"post\">");
+        w.write("<input type=\"text\" name=\"task\" size=\"25\"/>");
+        w.write("&nbsp;&nbsp;");
+        w.write("<input type=\"submit\" name=\"submit\" value=\"Add\"/>");
+        w.write("</form>");
 
-        if (user == null) {
+        w.write("<ol>");
+
+        if (userKey == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
@@ -51,27 +62,39 @@ public class AccountServlet extends HttpServlet {
         ao.executeInTransaction(new TransactionCallback<Void>() // (1)
         {
             public Void doInTransaction() {
-                for (ShortcutOverride shortcutOverride : ao.find(ShortcutOverride.class)) // (2)
+                for (ShortcutOverride shortcutOverride : ao.find(ShortcutOverride.class, Query.select().where("USER_KEY = ?", userKey.getStringValue()))) // (2)
                 {
-//                    w.printf("<li><%2$s> %s </%2$s></li>", shortcutOverride.getContext(), shortcutOverride.isEnabled() ? "strike" : "strong");
+                    System.out.printf("<li><%2$s> %s </%2$s></li>", shortcutOverride.getContext(), shortcutOverride.isEnabled() ? "strike" : "strong");
+                    w.printf("<li><%2$s> %s </%2$s></li>", shortcutOverride.getContext(), shortcutOverride.isEnabled() ? "strike" : "strong");
                 }
                 return null;
             }
         });
+        System.out.printf("strong");
+        System.out.println("lalala");
+        w.write("</ol>");
+        w.write("<script language='javascript'>document.forms[0].elements[0].focus();</script>");
+
 
         response.setContentType("text/html;charset=utf-8");
 //        renderer.render("templates/accountSettings.vm", ImmutableMap.<String, Object>of("user", user)), response.getWriter());
         renderer.render("templates/accountSettings.vm", response.getWriter());
+//        w.close();
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        final String description = req.getParameter("task");
+        final String description = request.getParameter("pullRequestA");
+        final UserKey userKey = userManager.getRemoteUserKey();
+
+        System.out.printf("description: %1$s", description);
+
         ao.executeInTransaction(new TransactionCallback<ShortcutOverride>() // (1)
         {
             public ShortcutOverride doInTransaction() {
                 final ShortcutOverride shortcutOverride = ao.create(ShortcutOverride.class); // (2)
+                shortcutOverride.setUserKey(userKey.getStringValue()); // (3)
                 shortcutOverride.setDescription(description); // (3)
                 shortcutOverride.save(); // (4)
                 return shortcutOverride;
