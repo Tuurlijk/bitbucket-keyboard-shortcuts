@@ -15,6 +15,7 @@ import com.atlassian.bitbucket.user.UserService;
 import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
+import com.atlassian.sal.api.user.UserProfile;
 import com.atlassian.templaterenderer.TemplateRenderer;
 import com.michielroos.bitbucket.plugin.keyboardshortcuts.ao.ShortcutOverride;
 
@@ -25,6 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import net.java.ao.Query;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -43,14 +46,6 @@ public class AccountServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final UserKey userKey = userManager.getRemoteUserKey();
         final PrintWriter w = response.getWriter();
-        w.write("<h1>Todos</h1>");
-
-        // the form to post more TODOs
-        w.write("<form method=\"post\">");
-        w.write("<input type=\"text\" name=\"task\" size=\"25\"/>");
-        w.write("&nbsp;&nbsp;");
-        w.write("<input type=\"submit\" name=\"submit\" value=\"Add\"/>");
-        w.write("</form>");
 
         w.write("<ol>");
 
@@ -64,8 +59,8 @@ public class AccountServlet extends HttpServlet {
             public Void doInTransaction() {
                 for (ShortcutOverride shortcutOverride : ao.find(ShortcutOverride.class, Query.select().where("USER_KEY = ?", userKey.getStringValue()))) // (2)
                 {
-                    System.out.printf("<li><%2$s> %s </%2$s></li>", shortcutOverride.getContext(), shortcutOverride.isEnabled() ? "strike" : "strong");
-                    w.printf("<li><%2$s> %s </%2$s></li>", shortcutOverride.getContext(), shortcutOverride.isEnabled() ? "strike" : "strong");
+                    System.out.printf("<li><%2$s> %s </%2$s></li>", shortcutOverride.getUserKey(), shortcutOverride.isEnabled() ? "strike" : "strong");
+                    w.printf("<li><%2$s> %s </%2$s></li>", shortcutOverride.getUserKey(), shortcutOverride.isEnabled() ? "strike" : "strong");
                 }
                 return null;
             }
@@ -73,12 +68,19 @@ public class AccountServlet extends HttpServlet {
         System.out.printf("strong");
         System.out.println("lalala");
         w.write("</ol>");
-        w.write("<script language='javascript'>document.forms[0].elements[0].focus();</script>");
 
+
+        Map<String, Object> velocityParams = new HashMap<String,Object>();
+
+        velocityParams.put("user", userManager.getRemoteUser());
+
+        UserProfile user = userManager.getRemoteUser();
+
+//        user.getFullName()
 
         response.setContentType("text/html;charset=utf-8");
 //        renderer.render("templates/accountSettings.vm", ImmutableMap.<String, Object>of("user", user)), response.getWriter());
-        renderer.render("templates/accountSettings.vm", response.getWriter());
+        renderer.render("templates/accountSettings.vm", velocityParams, response.getWriter());
 //        w.close();
     }
 

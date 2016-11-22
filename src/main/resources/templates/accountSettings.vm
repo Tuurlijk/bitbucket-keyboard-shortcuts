@@ -5,7 +5,7 @@
 	<meta name="activeTab" content="account-plugin-tab"/>
 	$webResourceManager.requireResource("com.atlassian.auiplugin:ajs")
 	$webResourceManager.requireResource("com.michielroos.plugin-keyboard-shortcuts:account.settings.resources")
-	<title>$user.displayName / Profile Tab</title>
+	<title>$i18n.getText('account.settings.servlet.header')</title>
 </head>
 <body>
 <header class="aui-page-header">
@@ -16,13 +16,16 @@
 <div class="aui-group account-settings">
 	<div class="aui-item">
 		<form class="aui prevent-double-submit " action="" method="post" accept-charset="UTF-8">
+				<h3>$i18n.getText('account.settings.servlet.context.pullRequest')</h3>
+			<fieldset class="group">
+				<legend><span>$i18n.getText('account.settings.servlet.disable')</span></legend>
+				<div class="checkbox">
+					<label for="pullRequestA">$i18n.getText('account.settings.servlet.context.pullRequest.A')</label>
+					<input type="checkbox" id="pullRequestA" name="pullRequestA" class="checkbox"/>
+				</div>
+			</fieldset>
 			<div class="field-group">
-				<label for="pullRequestA">Disable 'A':</label>
-				<input type="checkbox" id="pullRequestA" name="pullRequestA" class="text"/>
-				<div class="description">Disable 'A' to approve shortcut</div>
-			</div>
-			<div class="field-group">
-				<input type="submit" value="Save" class="button"/>
+				<input type="submit" value="$i18n.getText('account.settings.servlet.save')" class="button"/>
 			</div>
 		</form>
 	</div>
