@@ -77,7 +77,6 @@ public class AccountServlet extends HttpServlet {
         Map parms = request.getParameterMap();
         for (Iterator iterator = parms.entrySet().iterator(); iterator.hasNext(); ) {
             final Map.Entry entry = (Map.Entry) iterator.next();
-            System.out.println("parameter name: " + entry.getKey());
             final String[] parameterParts = entry.getKey().toString().split("_");
 
             if (request.getParameter((String) entry.getKey()).equals("on")) {
@@ -94,10 +93,7 @@ public class AccountServlet extends HttpServlet {
                     }
                 });
             }
-
-            System.out.println("value: " + request.getParameter((String) entry.getKey()));
         }
-
         response.sendRedirect("admin");
     }
 }
