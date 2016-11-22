@@ -77,17 +77,10 @@
 		<context>pull-request</context>
 	</keyboard-shortcut>
 
-	<ao key="ao-module">
-		<description>Data storage</description>
-		<entity>com.michielroos.bitbucket.servlet.ao.Override</entity>
-	</ao>
-
 	<component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
-	<component-import key="soyTemplateRenderer" interface="com.atlassian.soy.renderer.SoyTemplateRenderer"/>
-	<component-import key="userService" interface="com.atlassian.bitbucket.user.UserService" filter=""/>
-	<component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
-		<description>Component to access Active Objects functionality from the plugin</description>
-	</component-import>
+	<component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory"/>
+	<component-import key="userService" interface="com.atlassian.bitbucket.user.UserService"/>
+	<component-import key="renderer" interface="com.atlassian.templaterenderer.velocity.one.six.VelocityTemplateRenderer"/>
 
 	<servlet name="Account Servlet" key="account-servlet" class="com.michielroos.bitbucket.servlet.AccountServlet">
 		<description key="profile-servlet.description">The Account Servlet Plugin</description>
@@ -99,9 +92,4 @@
 		<link>/plugins/servlet/keyboard-shortcuts/account/${accountUser.name}</link>
 		<tooltip>Enable or disable keyboard shortcuts</tooltip>
 	</web-item>
-
-	<web-resource name="Keyboard Settings Web Resource" i18n-name-key="keyboard-settings-web-resource.name" key="keyboard-settings-web-resource">
-		<description key="keyboard-settings-web-resource.description">The Keyboard Settings Web Resource Plugin</description>
-		<resource name="templates.soy" type="download" location="/templates/templates.soy"/>
-	</web-resource>
 </atlassian-plugin>
