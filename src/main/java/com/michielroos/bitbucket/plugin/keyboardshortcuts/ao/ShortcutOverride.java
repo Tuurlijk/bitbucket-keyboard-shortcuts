@@ -14,6 +14,10 @@ import net.java.ao.Preload;
 
 @Preload
 public interface ShortcutOverride extends Entity {
+    String getPropertyKey();
+
+    void setPropertyKey(String propertyKey);
+
     String getUserKey();
 
     void setUserKey(String userKey);

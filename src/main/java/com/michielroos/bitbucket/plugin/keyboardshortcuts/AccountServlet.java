@@ -24,10 +24,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
+
 import net.java.ao.Query;
+
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -45,63 +46,58 @@ public class AccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final UserKey userKey = userManager.getRemoteUserKey();
-        final PrintWriter w = response.getWriter();
-
-        w.write("<ol>");
+        final Map<String, Object> velocityParams = new HashMap<String, Object>();
+        velocityParams.put("user", userManager.getRemoteUser());
 
         if (userKey == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
-        ao.executeInTransaction(new TransactionCallback<Void>() // (1)
-        {
+        ao.executeInTransaction(new TransactionCallback<Void>() {
             public Void doInTransaction() {
-                for (ShortcutOverride shortcutOverride : ao.find(ShortcutOverride.class, Query.select().where("USER_KEY = ?", userKey.getStringValue()))) // (2)
-                {
-                    System.out.printf("<li><%2$s> %s </%2$s></li>", shortcutOverride.getUserKey(), shortcutOverride.isEnabled() ? "strike" : "strong");
-                    w.printf("<li><%2$s> %s </%2$s></li>", shortcutOverride.getUserKey(), shortcutOverride.isEnabled() ? "strike" : "strong");
-                }
+                ShortcutOverride[] overrides = ao.find(ShortcutOverride.class, Query.select().where("USER_KEY = ?", userKey.getStringValue()));
+                velocityParams.put("overrides", overrides);
                 return null;
             }
         });
-        System.out.printf("strong");
-        System.out.println("lalala");
-        w.write("</ol>");
-
-
-        Map<String, Object> velocityParams = new HashMap<String,Object>();
-
-        velocityParams.put("user", userManager.getRemoteUser());
-
-        UserProfile user = userManager.getRemoteUser();
-
-//        user.getFullName()
 
         response.setContentType("text/html;charset=utf-8");
-//        renderer.render("templates/accountSettings.vm", ImmutableMap.<String, Object>of("user", user)), response.getWriter());
         renderer.render("templates/accountSettings.vm", velocityParams, response.getWriter());
-//        w.close();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        final String description = request.getParameter("pullRequestA");
+        final Map parameters = request.getParameterMap();
         final UserKey userKey = userManager.getRemoteUserKey();
 
-        System.out.printf("description: %1$s", description);
+        ao.delete(ao.find(ShortcutOverride.class, Query.select().where("USER_KEY = ?", userKey.getStringValue())));
 
-        ao.executeInTransaction(new TransactionCallback<ShortcutOverride>() // (1)
-        {
-            public ShortcutOverride doInTransaction() {
-                final ShortcutOverride shortcutOverride = ao.create(ShortcutOverride.class); // (2)
-                shortcutOverride.setUserKey(userKey.getStringValue()); // (3)
-                shortcutOverride.setDescription(description); // (3)
-                shortcutOverride.save(); // (4)
-                return shortcutOverride;
+        Map parms = request.getParameterMap();
+        for (Iterator iterator = parms.entrySet().iterator(); iterator.hasNext(); ) {
+            final Map.Entry entry = (Map.Entry) iterator.next();
+            System.out.println("parameter name: " + entry.getKey());
+            final String[] parameterParts = entry.getKey().toString().split("_");
+
+            if (request.getParameter((String) entry.getKey()).equals("on")) {
+                ao.executeInTransaction(new TransactionCallback<ShortcutOverride>() {
+                    public ShortcutOverride doInTransaction() {
+                        final ShortcutOverride shortcutOverride = ao.create(ShortcutOverride.class);
+                        shortcutOverride.setUserKey(userKey.getStringValue());
+                        shortcutOverride.setContext(parameterParts[0]);
+                        shortcutOverride.setShortcut(parameterParts[1]);
+                        shortcutOverride.setPropertyKey(parameterParts[0] + "_" + parameterParts[1]);
+                        shortcutOverride.setEnabled(true);
+                        shortcutOverride.save();
+                        return shortcutOverride;
+                    }
+                });
             }
-        });
+
+            System.out.println("value: " + request.getParameter((String) entry.getKey()));
+        }
+
         response.sendRedirect("admin");
     }
 }
