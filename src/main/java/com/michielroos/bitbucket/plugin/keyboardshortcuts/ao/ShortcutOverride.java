@@ -12,7 +12,7 @@ package com.michielroos.bitbucket.plugin.keyboardshortcuts.ao;
 import net.java.ao.Entity;
 import net.java.ao.Preload;
 
-@Preload
+@Preload({"propertyKey", "context", "shortcut", "enabled"})
 public interface ShortcutOverride extends Entity {
     String getPropertyKey();
 

@@ -11,11 +11,9 @@ package com.michielroos.bitbucket.plugin.keyboardshortcuts;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.bitbucket.user.Person;
-import com.atlassian.bitbucket.user.UserService;
 import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
-import com.atlassian.sal.api.user.UserProfile;
 import com.atlassian.templaterenderer.TemplateRenderer;
 import com.michielroos.bitbucket.plugin.keyboardshortcuts.ao.ShortcutOverride;
 

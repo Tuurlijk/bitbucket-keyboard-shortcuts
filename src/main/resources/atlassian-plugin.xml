@@ -11,21 +11,21 @@
 	<!-- add our i18n resource -->
 	<resource type="i18n" name="i18n" location="bitbucket-keyboard-shortcuts"/>
 	<!--
-		 Contexts:
-		 Got from: target/plugin/webapp/static/plugin/internal/widget/keyboard-shortcuts/keyboard-shortcuts.js
-		  'repository': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.repository') },
-		  'branch-compare': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.branch-compare') },
-		  'branch-list': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.branch-list') },
-		  'commit': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.commit') },
-		  'commits': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.commits') },
-		  'diff-tree': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.diff-tree') }, //Map this to commit too
-		  'diff-view': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.diff-view') },
-		  'filebrowser': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.filebrowser') },
-		  'global': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.global') },
-		  'pull-request': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.pull-request') },
-		  'pull-request-list': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.pull-request-list') },
-		  'pull-request-overview': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.pull-request') },
-		  'sourceview': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.sourceview') }
+		Contexts:
+		Got from: target/plugin/webapp/static/plugin/internal/widget/keyboard-shortcuts/keyboard-shortcuts.js
+		'repository': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.repository') },
+		'branch-compare': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.branch-compare') },
+		'branch-list': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.branch-list') },
+		'commit': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.commit') },
+		'commits': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.commits') },
+		'diff-tree': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.diff-tree') }, //Map this to commit too
+		'diff-view': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.diff-view') },
+		'filebrowser': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.filebrowser') },
+		'global': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.global') },
+		'pull-request': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.pull-request') },
+		'pull-request-list': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.pull-request-list') },
+		'pull-request-overview': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.pull-request') },
+		'sourceview': { displayName: AJS.I18n.getText('plugin.web.keyboardshortcut.context.sourceview') }
 		-->
 	<keyboard-shortcut name="Add Tag" i18n-name-key="add-tag.name" key="add-tag">
 		<description key="add-tag.description">Add tag</description>
@@ -81,6 +81,7 @@
 	<component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
 	<component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory"/>
 	<component-import key="renderer" interface="com.atlassian.templaterenderer.velocity.one.six.VelocityTemplateRenderer"/>
+	<component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/>
 	<component-import key="user-manager" name="SAL User Manager" interface="com.atlassian.sal.api.user.UserManager"/>
 
 	<servlet name="Account Servlet" key="account-servlet" class="com.michielroos.bitbucket.plugin.keyboardshortcuts.AccountServlet">
@@ -98,4 +99,8 @@
 		<link>/plugins/servlet/keyboard-shortcuts/account/${accountUser.name}</link>
 		<tooltip>Enable or disable keyboard shortcuts</tooltip>
 	</web-item>
+
+	<rest name="Shortcut Keyboard Override Resource" i18n-name-key="shortcut-override-resource.name" key="shortcut-override-resource" path="/keyboardshortcutoverride" version="1.0">
+		<description key="shortcut-override-resource.description">The Keyboard Shortcut Override Resource Plugin</description>
+	</rest>
 </atlassian-plugin>
