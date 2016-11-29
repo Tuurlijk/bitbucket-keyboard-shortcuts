@@ -66,6 +66,6 @@ public class ShortcutOverrideResource {
         }
         json = StringUtils.join(jsonLines, ',');
 
-        return Response.ok("{\"status\": \"ok\", \"shortcuts\": [" + json + "]}").build();
+        return Response.ok("{\"status\": \"ok\", \"overrides\": [" + json + "]}").build();
     }
 }

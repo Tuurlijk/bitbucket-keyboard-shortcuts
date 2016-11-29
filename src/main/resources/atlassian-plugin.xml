@@ -73,7 +73,28 @@
 		<description key="disabled-a-to-apporve.description">Disabled 'Approve' shortcut'</description>
 		<order>1650</order>
 		<shortcut>a</shortcut>
-		<operation type="execute">console.log('Type A to approve shortcut is disabled.');</operation>
+		<operation type="execute">require('bitbucket/util/server').rest({
+    type: 'GET',
+    url: AJS.contextPath() + '/rest/keyboardshortcutoverride/1.0/',
+    statusCode: {
+        200: function (data) {
+            var disable = false;
+            for (var override of data.overrides) {
+                if (override.shortcut === 'A') {
+                    disable = true;
+                    break;
+                }
+            }
+            if (!disable) {
+                console.log('approving');
+            } else {
+					require('bitbucket/internal/util/events').stop();
+                console.log('disabled');
+            }
+        }
+    }
+});
+</operation>
 		<context>pull-request</context>
 	</keyboard-shortcut>
 
