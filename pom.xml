@@ -4,9 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.michielroos</groupId>
 	<artifactId>bitbucket-keyboard-shortcuts</artifactId>
-	<version>1.0.4</version>
+	<version>1.0.6</version>
 	<organization>
-		<name>ℳichiel ℛoos</name>
+		<name>Michiel Roos</name>
 		<url>https://www.michielroos.com/</url>
 	</organization>
 	<name>bitbucket-keyboard-shortcuts</name>
@@ -197,9 +197,9 @@
 	</build>
 	<properties>
 		<ao.version>0.25.2</ao.version>
-		<bitbucket.version>4.11.1</bitbucket.version>
-		<bitbucket.data.version>4.11.1</bitbucket.data.version>
-		<amps.version>6.2.6</amps.version>
+		<bitbucket.version>6.3.1</bitbucket.version>
+		<bitbucket.data.version>6.3.1</bitbucket.data.version>
+		<amps.version>8.0.0</amps.version>
 		<atlassian.spring.scanner.version>1.2.13</atlassian.spring.scanner.version>
 		<!-- This key is used to keep the consistency between the key in atlassian-plugin.xml and the key to generate bundle. -->
 		<atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
